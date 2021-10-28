@@ -82,7 +82,8 @@ class App extends Component {
     }
 
     componentWillMount() {
-        const items = JSON.parse(localStorage.getItem('tasks'));
+        let items = JSON.parse(localStorage.getItem('tasks'));
+        items = items === null ? [] : items;
         this.setState({items});
     }
 
