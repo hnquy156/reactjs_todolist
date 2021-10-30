@@ -1,50 +1,45 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import Search from './Search';
 import Sort from './Sort';
 
-class Control extends Component {
-    constructor(props) {
-        super(props);
+function Control(props) {
 
-        this.state = {
+    let { orderBy, orderDirection, onClickSort } = props;
+    let classBtn = ['btn', 'btn-block'];
 
-        };
-
-        this.handleAdd = this.handleAdd.bind(this);
+    function handleAdd() {
+        props.onClickAdd();
     }
 
-    handleAdd() {
-        this.props.onClickAdd();
-    }
+    if (props.isShowForm)
+        classBtn.push('btn-danger')
+    else
+        classBtn.push('btn-info');
 
-    render() {
-        let { orderBy, orderDirection, onClickSort } = this.props;
-        let ElmButton = <button onClick={this.handleAdd} type="button" className="btn btn-info btn-block">Add Task</button>;
-        if (this.props.isShowForm)
-            ElmButton = <button onClick={this.handleAdd} type="button" className="btn btn-danger btn-block">Close Task</button>;
-        return (
-            <div className="row">
-                {/* SEARCH : START */}
-                <Search onClickSearchGo={ this.props.onClickSearchGo } />
-                {/* SEARCH : END */}
+    return (
+        <div className="row">
+            {/* SEARCH : START */}
+            <Search onClickSearchGo={ props.onClickSearchGo } />
+            {/* SEARCH : END */}
 
-                {/* SORT : START */}
-                <Sort 
-                    orderBy={orderBy}
-                    orderDirection={orderDirection}
-                    onClickSort={onClickSort}
-                />
-                {/* SORT : END */}
+            {/* SORT : START */}
+            <Sort 
+                orderBy={orderBy}
+                orderDirection={orderDirection}
+                onClickSort={onClickSort}
+            />
+            {/* SORT : END */}
 
-                {/* ADD : START */}
-                <div className="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                    { ElmButton }
-                </div>
-                {/* ADD : END */}
+            {/* ADD : START */}
+            <div className="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                <button onClick={handleAdd} type="button" className={classBtn.join(' ')}>
+                    {props.isShowForm ? 'Close Task' : 'Add Task'}    
+                </button>
             </div>
-        );
-    }
+            {/* ADD : END */}
+        </div>
+    );
 }
 
 export default Control;

@@ -1,38 +1,17 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class Item extends Component {
-    constructor(props) {
-        super(props);
+function Item(props) {
+    const { index, item } = props;
 
-        this.state = {
-
-        };
-        this.handeDelete = this.handeDelete.bind(this);
-        this.handeEdit = this.handeEdit.bind(this);
-    }
-    handeDelete(id) {
-        this.props.onClickDelete(id);
-    }
-    handeEdit(item) {
-        this.props.onClickEdit(item);
+    function handeDelete(id) {
+        props.onClickDelete(id);
     }
 
-    render() {
-        const { index, item } = this.props;
-        return (
-            <tr>
-                <td className="text-center">{index+1}</td>
-                <td>{item.name}</td>
-                <td className="text-center">{this.showElementLevel(item.level)}</td>
-                <td>
-                    <button onClick={() => this.handeEdit(item)} type="button" className="btn btn-warning">Edit</button>
-                    <button onClick={() => this.handeDelete(item.id)} type="button" className="btn btn-danger">Delete</button>
-                </td>
-            </tr>
-        );
+    function handeEdit(item) {
+        props.onClickEdit(item);
     }
 
-    showElementLevel(level) {
+    function showElementLevel(level) {
         const ALL_LEVEL = [
             <span className="label label-default">Small</span>,
             <span className="label label-info">Medium</span>,
@@ -40,6 +19,18 @@ class Item extends Component {
         ]
         return ALL_LEVEL[level];
     }
+
+    return (
+        <tr>
+            <td className="text-center">{index+1}</td>
+            <td>{item.name}</td>
+            <td className="text-center">{showElementLevel(item.level)}</td>
+            <td>
+                <button onClick={() => handeEdit(item)} type="button" className="btn btn-warning">Edit</button>
+                <button onClick={() => handeDelete(item.id)} type="button" className="btn btn-danger">Delete</button>
+            </td>
+        </tr>
+    );
 }
 
 export default Item;

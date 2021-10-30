@@ -1,85 +1,71 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 
-class Form extends Component {
-    constructor(props) {
-        super(props);
+function Form(props) {
 
-        this.state = {
-            taskId: '',
-            taskName: '',
-            taskLevel: 0,
-        };
-        this.handleCancel = this.handleCancel.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-    }
+    const [tasksItem, setTasksItem] = useState({
+        taskId: '',
+        taskName: '',
+        taskLevel: 0,
+    });
 
-    handleSubmit(event) {
-        const item = {
-            id: this.state.taskId,
-            name: this.state.taskName,
-            level: this.state.taskLevel,
-        }
-        this.props.onClickSubmit(item);
-        
+    function handleSubmit(event) {
         event.preventDefault();
+        const item = {
+            id: tasksItem.taskId,
+            name: tasksItem.taskName,
+            level: tasksItem.taskLevel,
+        }
+        props.onClickSubmit(item);
     }
 
-    handleChange(event) {
+    function handleChange(event) {
         const target = event.target;
         const name = target.name;
         const value = target.type === 'checkbox' ? target.checked: target.value;
-        this.setState({
+        
+        setTasksItem({
+            ...tasksItem,
             [name]: value,
         });
     }
 
-    handleCancel() {
-        this.props.handleToggleForm()
+    function handleCancel() {
+        props.handleToggleForm()
     }
 
-    componentWillMount() {
-        this.updateItems(this.props.itemSelected);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.updateItems(nextProps.itemSelected);
-    }
-
-    updateItems(item) {
-        if (item !== null) {
-            this.setState({
+    useEffect(()=>{
+        const item = props.itemSelected;
+        if (item) {
+            setTasksItem({
                 taskId: item.id,
                 taskName: item.name,
                 taskLevel: +item.level,
             });
         };
-    }
+    }, [props.itemSelected]);
 
-    render() {
-        return (
-            <div className="row">
-                <div className="col-md-offset-7 col-md-5">
-                    <form className="form-inline">
-                        <div className="form-group">
-                            <label className="sr-only" htmlFor>label</label>
-                            <input value={this.state.taskName} onChange={this.handleChange} name="taskName" type="text" className="form-control" placeholder="Task Name" />
-                        </div>
-                        <div className="form-group">
-                            <label className="sr-only" htmlFor>label</label>
-                            <select value={this.state.taskLevel} onChange={this.handleChange} name="taskLevel" id="inputDs" className="form-control" required="required">
-                                <option value={0}>Small</option>
-                                <option value={1}>Medium</option>
-                                <option value={2}>High</option>
-                            </select>
-                        </div>
-                        <button onClick={this.handleSubmit} type="submit" className="btn btn-primary">Submit</button>
-                        <button onClick={this.handleCancel} type="button" className="btn btn-default">Cancel</button>
-                    </form>
-                </div>
+    return (
+        <div className="row">
+            <div className="col-md-offset-7 col-md-5">
+                <form className="form-inline">
+                    <div className="form-group">
+                        <label className="sr-only" >label</label>
+                        <input value={tasksItem.taskName} onChange={handleChange} name="taskName" type="text" className="form-control" placeholder="Task Name" />
+                    </div>
+                    <div className="form-group">
+                        <label className="sr-only" >label</label>
+                        <select value={tasksItem.taskLevel} onChange={handleChange} name="taskLevel" id="inputDs" className="form-control" required="required">
+                            <option value={0}>Small</option>
+                            <option value={1}>Medium</option>
+                            <option value={2}>High</option>
+                        </select>
+                    </div>
+                    <button onClick={handleSubmit} type="submit" className="btn btn-primary">Submit</button>
+                    <button onClick={handleCancel} type="button" className="btn btn-default">Cancel</button>
+                </form>
             </div>
-        );
-    }
+        </div>
+    );
 }
 
 export default Form;
